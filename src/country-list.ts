@@ -1,3 +1,4 @@
+
 export const allCountries = [
   {
     "code": "AD",
@@ -996,3 +997,9 @@ export const allCountries = [
     "name": "Zimbabwe"
   }
 ];
+
+
+export const findCountry = (code:string )=> {
+  return allCountries.filter(c => c.code === code);
+};
+
