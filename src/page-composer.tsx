@@ -4,24 +4,12 @@ import { PersonalsForm } from './personal-page';
 import { SummaryPage } from './summary-page';
 import { CredentialsForm } from './credential-page';
 
-const steps = [
-  {
-    title: 'Personal Info',
-    content: <PersonalsForm></PersonalsForm>,
-  },
-  {
-    title: 'Credentials',
-    content: <CredentialsForm></CredentialsForm>,
-  },
-  {
-    title: 'Summary',
-    content: <SummaryPage></SummaryPage>,
-  },
-];
 
 export const PageComposer: React.FC = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const [personal, setPersonal] = useState({});
+  const [credentials, setCredentials] = useState({});
 
   const next = () => {
     setCurrent(current + 1);
@@ -30,6 +18,34 @@ export const PageComposer: React.FC = () => {
   const prev = () => {
     setCurrent(current - 1);
   };
+
+  const steps = [
+    {
+      title: 'Personal Info',
+      content: <PersonalsForm
+        onNext={(data) => {
+          setPersonal(data);
+          next();
+        }}></PersonalsForm>,
+    },
+    {
+      title: 'Credentials',
+      content: <CredentialsForm
+        onNext={(data) => {
+          setCredentials(data);
+          next();
+        }}
+        onPrev={() => prev()}></CredentialsForm>,
+    },
+    {
+      title: 'Summary',
+      content: <SummaryPage
+      personal={personal}
+      crendentials={credentials}
+       onComplete={() => message.success('Processing complete!')} 
+       onPrev={() => prev()}></SummaryPage>,
+    },
+  ];
 
   const items = steps.map((item) => ({ key: item.title, title: item.title }));
 
@@ -47,8 +63,9 @@ export const PageComposer: React.FC = () => {
     <Space direction="vertical" size={16}>
       <Steps current={current} items={items} />
       <div style={contentStyle}>{steps[current].content}</div>
-      <div style={{ marginTop: 24 }}>
-      {current > 0 && (
+
+      {/* <div style={{ marginTop: 24 }}>
+        {current > 0 && (
           <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
             Previous
           </Button>
@@ -63,7 +80,7 @@ export const PageComposer: React.FC = () => {
             Done
           </Button>
         )}
-      </div>
+      </div> */}
     </Space>
   );
 };

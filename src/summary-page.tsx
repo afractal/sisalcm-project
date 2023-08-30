@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Descriptions } from 'antd';
+import { Button, Card, Descriptions, Space } from 'antd';
 import type { DescriptionsProps } from 'antd';
 
 const items: DescriptionsProps['items'] = [
@@ -30,12 +30,28 @@ const items: DescriptionsProps['items'] = [
   },
 ];
 
-export const SummaryPage: React.FC = () => {
+
+type PropType = {
+  personal: any
+  credentials: any
+  onComplete: () => void
+  onPrev: () => void
+};
+
+export const SummaryPage = (props: PropType) => {
   return (
-    <Card title="Review data"  style={{ width: 800 }}>
+    <Card title="Review data" style={{ width: 800 }}>
       <Descriptions title="Personal Info" items={items} />
       <Descriptions title="Credentials" items={items} />
+
+      <Space wrap>
+        <Button type="text" htmlType="button" onClick={() => props.onPrev()}>
+          Back
+        </Button>
+        <Button type="primary" htmlType="submit">
+          Complete
+        </Button>
+      </Space>
     </Card>
   );
 };
-
