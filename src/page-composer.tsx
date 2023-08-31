@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Button, message, Space, Steps, theme } from 'antd';
+import { message, Space, Steps, theme } from 'antd';
 import { PersonalsForm } from './personal-page';
-import { SummaryPage } from './summary-page';
+import { KeyValuePair, SummaryPage } from './summary-page';
 import { CredentialsForm } from './credential-page';
 
 
 export const PageComposer: React.FC = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
-  const [personal, setPersonal] = useState({});
-  const [credentials, setCredentials] = useState({});
+  const [personals, setPersonals] = useState<KeyValuePair[]>([]);
+  const [credentials, setCredentials] = useState<KeyValuePair[]>([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -24,7 +24,8 @@ export const PageComposer: React.FC = () => {
       title: 'Personal Info',
       content: <PersonalsForm
         onNext={(data) => {
-          setPersonal(data);
+          const payload = Object.entries(data).map(([k, v]) => ({ label: k, value: String(v) }));
+          setPersonals(payload as KeyValuePair[]);
           next();
         }}></PersonalsForm>,
     },
@@ -32,7 +33,8 @@ export const PageComposer: React.FC = () => {
       title: 'Credentials',
       content: <CredentialsForm
         onNext={(data) => {
-          setCredentials(data);
+          const payload = Object.entries(data).map(([k, v]) => ({ label: k, value: v }));
+          setCredentials(payload as KeyValuePair[]);
           next();
         }}
         onPrev={() => prev()}></CredentialsForm>,
@@ -40,10 +42,10 @@ export const PageComposer: React.FC = () => {
     {
       title: 'Summary',
       content: <SummaryPage
-      personal={personal}
-      crendentials={credentials}
-       onComplete={() => message.success('Processing complete!')} 
-       onPrev={() => prev()}></SummaryPage>,
+        personals={personals}
+        credentials={credentials}
+        onComplete={() => message.success('Processing complete!')}
+        onPrev={() => prev()}></SummaryPage>,
     },
   ];
 

@@ -1,54 +1,33 @@
 import React from 'react';
 import { Button, Card, Descriptions, Space } from 'antd';
-import type { DescriptionsProps } from 'antd';
 
-const items: DescriptionsProps['items'] = [
-  {
-    key: '1',
-    label: 'Name',
-    children: 'Zhou Maomao',
-  },
-  {
-    key: '2',
-    label: 'Surname',
-    children: 'Hangzhou, Zhejiang',
-  },
-  {
-    key: '3',
-    label: 'Telephone',
-    children: '1810000000',
-  },
-  {
-    key: '4',
-    label: 'Date of birth',
-    children: '01/01/2000',
-  },
-  {
-    key: '5',
-    label: 'Nationality',
-    children: 'China',
-  },
-];
-
+export type KeyValuePair = { label: string, value: string }
 
 type PropType = {
-  personal: any
-  credentials: any
+  personals: KeyValuePair[]
+  credentials: KeyValuePair[]
   onComplete: () => void
   onPrev: () => void
 };
 
+const mapType = (items: KeyValuePair[]) => {
+  return items.map((i, indx) => {
+    return { key: indx, label: i.label, children: i.value };
+  });
+};
+
 export const SummaryPage = (props: PropType) => {
+  console.log(props)
   return (
     <Card title="Review data" style={{ width: 800 }}>
-      <Descriptions title="Personal Info" items={items} />
-      <Descriptions title="Credentials" items={items} />
+      <Descriptions title="Personal Info" items={mapType(props.personals)} />
+      <Descriptions title="Credentials" items={mapType(props.credentials)} />
 
       <Space wrap>
         <Button type="text" htmlType="button" onClick={() => props.onPrev()}>
           Back
         </Button>
-        <Button type="primary" htmlType="submit">
+        <Button type="primary" htmlType="submit" onClick={() => props.onComplete()}>
           Complete
         </Button>
       </Space>

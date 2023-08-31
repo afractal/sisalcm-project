@@ -50,7 +50,6 @@ export const PersonalsForm = (props: PropType) => {
   const [form] = Form.useForm();
 
   const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
     props.onNext(values);
   };
 
