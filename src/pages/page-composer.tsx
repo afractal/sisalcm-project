@@ -1,27 +1,33 @@
 import React, { useState } from 'react';
-import { message, Space, Steps, theme } from 'antd';
+import { message, Progress, Space, Steps, theme } from 'antd';
 import { PersonalsForm } from './personal-page';
 import { KeyValuePair, SummaryPage } from './summary-page';
 import { CredentialsForm } from './credential-page';
+import { ConfirmationPage } from './confirmation-page';
+import { signUp } from './signup-service';
 
 
-export const PageComposer: React.FC = () => {
+
+export const PageComposer = () => {
   const { token } = theme.useToken();
   const [current, setCurrent] = useState(0);
+  const [progress, setProgress] = useState(25);
   const [personals, setPersonals] = useState<KeyValuePair[]>([]);
   const [credentials, setCredentials] = useState<KeyValuePair[]>([]);
 
   const next = () => {
     setCurrent(current + 1);
+    setProgress(p => p * 2);
   };
 
   const prev = () => {
     setCurrent(current - 1);
+    setProgress(p => p / 2);
   };
 
   const steps = [
     {
-      title: 'Personal Info',
+      title: 'Personal Data',
       content: <PersonalsForm
         onNext={(data) => {
           const payload = Object.entries(data).map(([k, v]) => ({ label: k, value: String(v) }));
@@ -30,7 +36,7 @@ export const PageComposer: React.FC = () => {
         }}></PersonalsForm>,
     },
     {
-      title: 'Credentials',
+      title: 'Email and password',
       content: <CredentialsForm
         onNext={(data) => {
           const payload = Object.entries(data).map(([k, v]) => ({ label: k, value: v }));
@@ -44,8 +50,22 @@ export const PageComposer: React.FC = () => {
       content: <SummaryPage
         personals={personals}
         credentials={credentials}
-        onComplete={() => message.success('Processing complete!')}
+        onComplete={() => {
+          signUp({ personals, credentials }).then(() => {
+            message.success('Registration complete!')
+          }, () => {
+            message.error('Error occured!')
+          });
+          next()
+        }}
         onPrev={() => prev()}></SummaryPage>,
+    },
+    {
+      title: 'Confirmation',
+      content: <ConfirmationPage
+        onClose={() => {
+          message.success('Closing Registration ...');
+        }}></ConfirmationPage>,
     },
   ];
 
@@ -57,32 +77,14 @@ export const PageComposer: React.FC = () => {
     color: token.colorTextTertiary,
     backgroundColor: token.colorFillAlter,
     borderRadius: token.borderRadiusLG,
-    border: `1px dashed ${token.colorBorder}`,
-    marginTop: 16,
+    marginTop: -14,
   };
 
   return (
-    <Space direction="vertical" size={16}>
+    <Space direction="vertical" size={18} style={{ marginTop: "4em" }}>
       <Steps current={current} items={items} />
+      <Progress percent={progress} status="active" showInfo={false} />
       <div style={contentStyle}>{steps[current].content}</div>
-
-      {/* <div style={{ marginTop: 24 }}>
-        {current > 0 && (
-          <Button style={{ margin: '0 8px' }} onClick={() => prev()}>
-            Previous
-          </Button>
-        )}
-        {current < steps.length - 1 && (
-          <Button type="primary" onClick={() => next()}>
-            Next
-          </Button>
-        )}
-        {current === steps.length - 1 && (
-          <Button type="primary" onClick={() => message.success('Processing complete!')}>
-            Done
-          </Button>
-        )}
-      </div> */}
     </Space>
   );
 };

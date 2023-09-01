@@ -1,7 +1,7 @@
 import React from 'react';
-import './App.css';
+import './app.css';
 
-import { PageComposer } from './page-composer';
+import { PageComposer } from './pages/page-composer';
 
 export const App = () =>{
   return (

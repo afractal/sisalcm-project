@@ -48,14 +48,28 @@ type PropType = {
 
 export const PersonalsForm = (props: PropType) => {
   const [form] = Form.useForm();
+  const [submittable, setSubmittable] = React.useState(false);
+  const values = Form.useWatch([], form);
 
+  React.useEffect(() => {
+    form.validateFields({ validateOnly: true }).then(
+      () => {
+        setSubmittable(true);
+      },
+      () => {
+        setSubmittable(false);
+      },
+    );
+  }, [values]);
+  
   const onFinish = (values: any) => {
+    console.log('Success:', values);
     props.onNext(values);
   };
 
   const prefixSelector = (
     <Form.Item name="prefix" noStyle>
-      <Select style={{ width: 70 }}>
+      <Select>
         {allPrexisOptions()}
       </Select>
     </Form.Item>
@@ -66,7 +80,7 @@ export const PersonalsForm = (props: PropType) => {
       <Form
         {...formItemLayout}
         form={form}
-        name="register"
+        name="personal"
         onFinish={onFinish}
         initialValues={{ nationality: 'AL', prefix: '+355' }}
         style={{ maxWidth: 600 }}
@@ -89,7 +103,7 @@ export const PersonalsForm = (props: PropType) => {
 
         <Form.Item
           name="phone"
-          label="Phone Number"
+          label="Phone"
           rules={[{ required: true, type: "regexp", message: 'Please input your Phone number!' }]}
         >
           <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
@@ -114,9 +128,9 @@ export const PersonalsForm = (props: PropType) => {
           </Select>
         </Form.Item>
 
-        <Form.Item {...tailFormItemLayout}>
+        <Form.Item {...tailFormItemLayout} >
           <Space wrap>
-            <Button type="default" htmlType="submit">
+            <Button type="default" htmlType="submit" disabled={!submittable}>
               Next
             </Button>
           </Space>
