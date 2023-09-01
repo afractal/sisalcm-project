@@ -53,10 +53,10 @@ export const PageComposer = () => {
         onComplete={() => {
           signUp({ personals, credentials }).then(() => {
             message.success('Registration complete!')
+            next();
           }, () => {
             message.error('Error occured!')
           });
-          next()
         }}
         onPrev={() => prev()}></SummaryPage>,
     },
