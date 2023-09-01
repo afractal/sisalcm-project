@@ -66,7 +66,7 @@ export const PageComposer = () => {
       content: <ConfirmationPage
         onClose={() => {
           message.loading('Closing Registration ...');
-          setTimeout(() => window.location.reload(), (Math.random() * 5000));
+          setTimeout(() => window.location.reload(), (4000));
         }}></ConfirmationPage>,
     },
   ];
