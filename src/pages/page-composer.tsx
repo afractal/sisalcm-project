@@ -17,12 +17,12 @@ export const PageComposer = () => {
 
   const next = () => {
     setCurrent(current + 1);
-    setProgress(p => p * 2);
+    setProgress(p => p + 25);
   };
 
   const prev = () => {
     setCurrent(current - 1);
-    setProgress(p => p / 2);
+    setProgress(p => p - 25);
   };
 
   const steps = [
