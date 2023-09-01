@@ -51,6 +51,7 @@ export const PageComposer = () => {
         personals={personals}
         credentials={credentials}
         onComplete={() => {
+          message.loading(' ...');
           signUp({ personals, credentials }).then(() => {
             message.success('Registration complete!')
             next();
@@ -64,7 +65,7 @@ export const PageComposer = () => {
       title: 'Confirmation',
       content: <ConfirmationPage
         onClose={() => {
-          message.success('Closing Registration ...');
+          message.loading('Closing Registration ...');
         }}></ConfirmationPage>,
     },
   ];
@@ -83,7 +84,7 @@ export const PageComposer = () => {
   return (
     <Space direction="vertical" size={18} style={{ marginTop: "4em" }}>
       <Steps current={current} items={items} />
-      <Progress percent={progress} status="active" showInfo={false} />
+      <Progress percent={progress} status="active" showInfo={false}  />
       <div style={contentStyle}>{steps[current].content}</div>
     </Space>
   );
