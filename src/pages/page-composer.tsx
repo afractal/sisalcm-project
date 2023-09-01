@@ -66,6 +66,7 @@ export const PageComposer = () => {
       content: <ConfirmationPage
         onClose={() => {
           message.loading('Closing Registration ...');
+          setTimeout(() => window.location.reload(), (Math.random() * 5000));
         }}></ConfirmationPage>,
     },
   ];
@@ -84,7 +85,7 @@ export const PageComposer = () => {
   return (
     <Space direction="vertical" size={18} style={{ marginTop: "4em" }}>
       <Steps current={current} items={items} />
-      <Progress percent={progress} status="active" showInfo={false}  />
+      <Progress percent={progress} status="active" showInfo={false} />
       <div style={contentStyle}>{steps[current].content}</div>
     </Space>
   );
